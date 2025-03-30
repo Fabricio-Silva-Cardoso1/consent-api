@@ -1,8 +1,7 @@
 package com.challenge.api.service;
 
-import com.challenge.api.constans.ConsentsStatus;
+import com.challenge.api.constants.ConsentsStatus;
 import com.challenge.api.dto.PostConsentRequestDTO;
-import com.challenge.api.dto.PostConsentsResponseDTO;
 import com.challenge.api.mapper.ConsentsMapper;
 import com.challenge.api.model.Consents;
 import com.challenge.api.repository.ConsentsRepository;
@@ -15,25 +14,28 @@ import java.util.UUID;
 @Service
 public class ConsentsService {
 
-    //@Autowired
-    //private ConsentsRepository consentsRepository;
+    @Autowired
+    private ConsentsRepository consentsRepository;
 
     private ConsentsStatus consentsStatus;
 
     private ConsentsMapper consentsMapper;
 
     public Consents postConsents(PostConsentRequestDTO postConsentRequestDTO){
+
         LocalDateTime creationDateTime = LocalDateTime.now();
+
         Consents consents = Consents
                 .builder()
-                .status(ConsentsStatus.STATUS_ACTIVE)
+                .status(ConsentsStatus.ACTIVE)
                 .cpf(postConsentRequestDTO.cpf())
                 .id(UUID.randomUUID())
                 .creationDateTime(creationDateTime)
                 .expirationDateTime(creationDateTime.plusMonths(Long.parseLong(postConsentRequestDTO.consentDurationTime())))
                 .build();
 
-        //Consents consentsCreated = consentsRepository.save(consents);
+        Consents consentsCreated = consentsRepository.save(consents);
+        System.out.println(consentsCreated);
 
         return consents;
         //return consentsMapper.mapConsentsToPostConsentsResponseDto(consentsCreated);

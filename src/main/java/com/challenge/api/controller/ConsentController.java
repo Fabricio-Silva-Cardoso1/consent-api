@@ -17,7 +17,6 @@ public class ConsentController {
 
     @PostMapping("/consents")
     public ResponseEntity<Consents> createConsents (@RequestBody PostConsentRequestDTO postConsentRequestDTO){
-        System.out.println(postConsentRequestDTO.toString());
         return new ResponseEntity<>(consentsService.postConsents(postConsentRequestDTO), HttpStatus.CREATED);
     }
 

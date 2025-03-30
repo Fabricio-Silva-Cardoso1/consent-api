@@ -1,13 +1,11 @@
 package com.challenge.api.model;
 
-import com.challenge.api.constans.ConsentsStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.challenge.api.constants.ConsentsStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,7 +13,7 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+@Document
 @Getter
 @Setter
 @Builder
@@ -23,7 +21,6 @@ import java.util.UUID;
 public class Consents {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private final UUID id;
 
     @NotBlank

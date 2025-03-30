@@ -2,6 +2,8 @@ package com.challenge.api.service;
 
 import com.challenge.api.constants.ConsentsStatus;
 import com.challenge.api.dto.PostConsentRequestDTO;
+import com.challenge.api.dto.PostConsentsResponseDTO;
+import com.challenge.api.exception.PostConsentsDtoException;
 import com.challenge.api.mapper.ConsentsMapper;
 import com.challenge.api.model.Consents;
 import com.challenge.api.repository.ConsentsRepository;
@@ -19,11 +21,14 @@ public class ConsentsService {
 
     private ConsentsStatus consentsStatus;
 
+    @Autowired
     private ConsentsMapper consentsMapper;
 
-    public Consents postConsents(PostConsentRequestDTO postConsentRequestDTO){
+    public PostConsentsResponseDTO postConsents(PostConsentRequestDTO postConsentRequestDTO){
 
-        LocalDateTime creationDateTime = LocalDateTime.now();
+        if(postConsentRequestDTO.isConsentDurationTimeEmpty()) throw new PostConsentsDtoException("Duração do consentimento precisa ser preenchido com um valor maior que 0!");
+
+        LocalDateTime creationDateTime = LocalDateTime.now().withNano(0);
 
         Consents consents = Consents
                 .builder()
@@ -31,13 +36,11 @@ public class ConsentsService {
                 .cpf(postConsentRequestDTO.cpf())
                 .id(UUID.randomUUID())
                 .creationDateTime(creationDateTime)
-                .expirationDateTime(creationDateTime.plusMonths(Long.parseLong(postConsentRequestDTO.consentDurationTime())))
+                .expirationDateTime(creationDateTime.plusMonths(Long.valueOf(postConsentRequestDTO.consentDurationTime())))
                 .build();
 
         Consents consentsCreated = consentsRepository.save(consents);
-        System.out.println(consentsCreated);
 
-        return consents;
-        //return consentsMapper.mapConsentsToPostConsentsResponseDto(consentsCreated);
+        return consentsMapper.mapConsentsToPostConsentsResponseDto(consentsCreated);
     }
 }

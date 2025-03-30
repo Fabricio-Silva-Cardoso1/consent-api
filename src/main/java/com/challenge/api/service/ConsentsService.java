@@ -4,6 +4,7 @@ import com.challenge.api.constants.ConsentsStatus;
 import com.challenge.api.dto.PostConsentRequestDTO;
 import com.challenge.api.dto.PostConsentsResponseDTO;
 import com.challenge.api.exception.PostConsentsDtoException;
+import com.challenge.api.exception.PostConsentsException;
 import com.challenge.api.mapper.ConsentsMapper;
 import com.challenge.api.model.Consents;
 import com.challenge.api.repository.ConsentsRepository;
@@ -27,6 +28,7 @@ public class ConsentsService {
     public PostConsentsResponseDTO postConsents(PostConsentRequestDTO postConsentRequestDTO){
 
         if(postConsentRequestDTO.isConsentDurationTimeEmpty()) throw new PostConsentsDtoException("Duração do consentimento precisa ser preenchido com um valor maior que 0!");
+        if(!postConsentRequestDTO.isCpfValid(postConsentRequestDTO.cpf())) throw new PostConsentsException("CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##");
 
         LocalDateTime creationDateTime = LocalDateTime.now().withNano(0);
 

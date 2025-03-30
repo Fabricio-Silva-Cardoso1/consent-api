@@ -1,11 +1,13 @@
 package com.challenge.api.model;
 
 import com.challenge.api.constants.ConsentsStatus;
+import com.challenge.api.exception.PostConsentsException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,24 +25,32 @@ public class Consents {
     @Id
     private final UUID id;
 
-    @NotBlank
-    @NotNull
+    @NotBlank(message = "Consentimento precisa de um status inicial!")
+    @NotNull(message = "Consentimento precisa de um status inicial!")
     private ConsentsStatus status;
 
     @NotBlank (message = "Precisa de uma data de criação")
     @NotNull
     private final LocalDateTime creationDateTime;
 
-    @NotBlank (message = "Precisa de um tem de expiração")
+    @NotBlank(message = "Precisa de um tem de expiração")
     @NotNull
     private final LocalDateTime expirationDateTime;
 
     @NotBlank(message = "CPF necessário para criar o consentimento")
-    @NotNull
+    @NotNull(message = "CPF necessário para criar o consentimento")
     @Pattern(regexp = "([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[\\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2})")
     private final String cpf;
 
     public Consents(UUID id, ConsentsStatus status, LocalDateTime expirationDateTime, LocalDateTime creationDateTime, String cpf) {
+
+        try{
+            Assert.notNull(cpf, "Campo 'CPF' é obrigatório!!");
+            Assert.isTrue(cpf.matches("^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$"), "CPF inválido");
+        }catch (Exception e){
+            throw new PostConsentsException("CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##");
+        }
+
         this.id = id;
         this.cpf = cpf;
         this.expirationDateTime = expirationDateTime;

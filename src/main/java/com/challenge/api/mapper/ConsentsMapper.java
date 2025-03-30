@@ -4,8 +4,9 @@ import com.challenge.api.dto.PostConsentRequestDTO;
 import com.challenge.api.dto.PostConsentsResponseDTO;
 import com.challenge.api.model.Consents;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ConsentsMapper {
 
     Consents mapCreateConsentDtoToConsent(PostConsentRequestDTO postConsentRequestDto);

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface ConsentRepository extends JpaRepository<Consents, UUID> {
+public interface ConsentsRepository extends JpaRepository<Consents, UUID> {
 
 }

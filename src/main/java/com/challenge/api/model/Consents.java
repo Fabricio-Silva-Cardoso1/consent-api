@@ -44,13 +44,6 @@ public class Consents {
 
     public Consents(UUID id, ConsentsStatus status, LocalDateTime expirationDateTime, LocalDateTime creationDateTime, String cpf) {
 
-        try{
-            Assert.notNull(cpf, "Campo 'CPF' é obrigatório!!");
-            Assert.isTrue(cpf.matches("^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$"), "CPF inválido");
-        }catch (Exception e){
-            throw new PostConsentsException("CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##");
-        }
-
         this.id = id;
         this.cpf = cpf;
         this.expirationDateTime = expirationDateTime;
@@ -68,6 +61,4 @@ public class Consents {
                 ", status do consentimento'" + this.status +
                 '}';
     }
-
-
 }

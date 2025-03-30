@@ -2,10 +2,13 @@ package com.challenge.api.repository;
 
 
 import com.challenge.api.model.Consents;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-public interface ConsentsRepository extends JpaRepository<Consents, UUID> {
+@Repository
+
+public interface ConsentsRepository extends MongoRepository<Consents, UUID> {
 
 }

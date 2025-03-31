@@ -1,9 +1,7 @@
 package com.challenge.api.controller;
 
-import com.challenge.api.dto.GetAllConsentsResponseDTO;
-import com.challenge.api.dto.GetConsentByIdResponseDTO;
-import com.challenge.api.dto.PostConsentRequestDTO;
-import com.challenge.api.dto.PostConsentsResponseDTO;
+import com.challenge.api.dto.*;
+import com.challenge.api.model.Consents;
 import com.challenge.api.service.ConsentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,16 @@ public class ConsentController {
     @GetMapping("/consents/{consentId}")
     public ResponseEntity<GetConsentByIdResponseDTO> getConsentById(@PathVariable UUID consentId){
         return new ResponseEntity<>(consentsService.getConsentByIdResponseDTO(consentId), HttpStatus.OK);
+    }
+
+    @PutMapping("/consents/{consentId}")
+    public ResponseEntity<PostConsentsResponseDTO> putConsentById(@PathVariable UUID consentId, @RequestBody PutConsentByIdRequestDTO putConsentByIdRequestDTO){
+        return new ResponseEntity<>(consentsService.putConsentResponseDTO(consentId,putConsentByIdRequestDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/consents/{consentId}")
+    public ResponseEntity<String> deleteConsentById(@PathVariable UUID consentId){
+        return new ResponseEntity<>(consentsService.deleteConsentResponseDTO(consentId), HttpStatus.NO_CONTENT);
     }
 
 }

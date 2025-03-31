@@ -1,7 +1,8 @@
 package com.challenge.api.service;
 
 import com.challenge.api.constants.ConsentsStatus;
-import com.challenge.api.dto.GetAllConsentsReponseDTO;
+import com.challenge.api.dto.GetAllConsentsResponseDTO;
+import com.challenge.api.dto.GetConsentByIdResponseDTO;
 import com.challenge.api.dto.PostConsentRequestDTO;
 import com.challenge.api.dto.PostConsentsResponseDTO;
 import com.challenge.api.exception.PostConsentsDtoException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -48,9 +50,17 @@ public class ConsentsService {
         return consentsMapper.mapConsentsToPostConsentsResponseDto(consentsCreated);
     }
 
-    public List<GetAllConsentsReponseDTO> getAllConsentsResponseDTO(){
+    public List<GetAllConsentsResponseDTO> getAllConsentsResponseDTO(){
+
         List<Consents> getAllConsents = consentsRepository.findAll();
 
         return consentsMapper.mapConsentsToGetAllConsentsResponseDTO(getAllConsents);
+    }
+
+    public GetConsentByIdResponseDTO getConsentByIdResponseDTO(UUID consentId){
+
+        Consents getConsetById = this.consentsRepository.findById(consentId).orElseThrow(() -> new NullPointerException("Usuario não encontrado!!"));
+
+        return consentsMapper.mapConsentsToGetConsentByIdResponseDTO(getConsetById);
     }
 }

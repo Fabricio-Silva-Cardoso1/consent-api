@@ -10,9 +10,7 @@ import javax.validation.constraints.NotNull;
 @NotEmpty(message = "Verificar os campos da requisição")
 public record PostConsentRequestDTO(String cpf, int consentDurationTime) {
 
-    public boolean isConsentDurationTimeEmpty(){
-        return this.consentDurationTime < 1;
-    }
+    public boolean isConsentDurationTimeEmpty(){ return this.consentDurationTime < 1; }
 
     public boolean isCpfValid(String cpf){
         return this.cpf.matches("^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$");

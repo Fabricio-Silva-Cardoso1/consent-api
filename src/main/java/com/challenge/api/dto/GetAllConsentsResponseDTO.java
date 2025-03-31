@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record GetAllConsentsReponseDTO(UUID id, LocalDateTime creationDateTime, LocalDateTime expirationDateTime, String cpf, ConsentsStatus status) {
+public record GetAllConsentsResponseDTO(UUID id, LocalDateTime creationDateTime, LocalDateTime expirationDateTime, String cpf, ConsentsStatus status) {
 }

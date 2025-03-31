@@ -35,7 +35,7 @@ public class Consents {
 
     @NotBlank(message = "Precisa de um tem de expiração")
     @NotNull
-    private final LocalDateTime expirationDateTime;
+    private LocalDateTime expirationDateTime;
 
     @NotBlank(message = "CPF necessário para criar o consentimento")
     @NotNull(message = "CPF necessário para criar o consentimento")
@@ -50,6 +50,8 @@ public class Consents {
         this.creationDateTime = creationDateTime;
         this.status = status;
     }
+
+
 
     @Override
     public String toString(){

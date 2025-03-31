@@ -1,6 +1,7 @@
 package com.challenge.api.service;
 
 import com.challenge.api.constants.ConsentsStatus;
+import com.challenge.api.dto.GetAllConsentsReponseDTO;
 import com.challenge.api.dto.PostConsentRequestDTO;
 import com.challenge.api.dto.PostConsentsResponseDTO;
 import com.challenge.api.exception.PostConsentsDtoException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -44,5 +46,11 @@ public class ConsentsService {
         Consents consentsCreated = consentsRepository.save(consents);
 
         return consentsMapper.mapConsentsToPostConsentsResponseDto(consentsCreated);
+    }
+
+    public List<GetAllConsentsReponseDTO> getAllConsentsResponseDTO(){
+        List<Consents> getAllConsents = consentsRepository.findAll();
+
+        return consentsMapper.mapConsentsToGetAllConsentsResponseDTO(getAllConsents);
     }
 }

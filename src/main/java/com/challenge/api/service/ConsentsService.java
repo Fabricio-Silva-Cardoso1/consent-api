@@ -11,7 +11,6 @@ import com.challenge.api.repository.ConsentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponseException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,23 +51,23 @@ public class ConsentsService {
         return consentsMapper.mapConsentsToPostConsentsResponseDto(consentsCreated);
     }
 
-    public List<GetAllConsentsResponseDTO> getAllConsentsResponseDTO(){
+    public List<GetAllConsentsResponseDTO> getAllConsents(){
 
         List<Consents> getAllConsents = this.consentsRepository.findAll();
 
         return consentsMapper.mapConsentsToGetAllConsentsResponseDTO(getAllConsents);
     }
 
-    public GetConsentByIdResponseDTO getConsentByIdResponseDTO(UUID consentId){
+    public GetConsentByIdResponseDTO getConsentById(UUID consentId){
 
         Consents getConsetById = this.consentsRepository.findById(consentId).orElseThrow(() -> new NullPointerException("Usuario não encontrado!!"));
 
         return consentsMapper.mapConsentsToGetConsentByIdResponseDTO(getConsetById);
     }
 
-    public PostConsentsResponseDTO putConsentResponseDTO (UUID consentId, PutConsentByIdRequestDTO putConsentByIdRequestDTO){
+    public PostConsentsResponseDTO putConsent (UUID consentId, PutConsentByIdRequestDTO putConsentByIdRequestDTO){
 
-        Consents userConsent = this.consentsRepository.findById(consentId).orElseThrow(() -> new NullPointerException("Usuario não encontrado!!"));
+        Consents userConsent = this.consentsRepository.findById(consentId).orElseThrow(() -> new NullPointerException("Consentimento não encontrado!!"));
 
         if(putConsentByIdRequestDTO.expirationDateTime().isBefore(LocalDateTime.now().plusNanos(0))) throw new PutConsentByIdException("Data inválida! Valor deve ser no futuro.");
 
@@ -81,7 +80,7 @@ public class ConsentsService {
 
     }
 
-    public String deleteConsentResponseDTO(UUID consentId){
+    public String deleteConsent(UUID consentId){
 
         this.consentsRepository.updateConsent(consentId, ConsentsStatus.REVOKED);
 

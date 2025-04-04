@@ -14,13 +14,10 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ConsentsMapper {
 
-    Consents mapCreateConsentDtoToConsent(PostConsentRequestDTO postConsentRequestDto);
 
-    @Mapping(source = "id", target = "id")
     PostConsentsResponseDTO mapConsentsToPostConsentsResponseDto(Consents consents);
 
     List<GetAllConsentsResponseDTO> mapConsentsToGetAllConsentsResponseDTO(List<Consents> consents);
-
 
     GetConsentByIdResponseDTO mapConsentsToGetConsentByIdResponseDTO(Consents consents);
 }

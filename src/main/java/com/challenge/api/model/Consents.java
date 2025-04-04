@@ -1,10 +1,7 @@
 package com.challenge.api.model;
 
 import com.challenge.api.constants.ConsentsStatus;
-import lombok.Builder;
-import lombok.Generated;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,11 +15,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Consents {
 
     @Id
-    private final UUID id;
+    private UUID id;
 
     @NotBlank(message = "Consentimento precisa de um status inicial!")
     @NotNull(message = "Consentimento precisa de um status inicial!")
@@ -30,7 +29,7 @@ public class Consents {
 
     @NotBlank (message = "Precisa de uma data de criação")
     @NotNull
-    private final LocalDateTime creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @NotBlank(message = "Precisa de um tem de expiração")
     @NotNull
@@ -39,16 +38,7 @@ public class Consents {
     @NotBlank(message = "CPF necessário para criar o consentimento")
     @NotNull(message = "CPF necessário para criar o consentimento")
     @Pattern(regexp = "([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[\\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2})")
-    private final String cpf;
-
-    public Consents(UUID id, ConsentsStatus status, LocalDateTime expirationDateTime, LocalDateTime creationDateTime, String cpf) {
-
-        this.id = id;
-        this.cpf = cpf;
-        this.expirationDateTime = expirationDateTime;
-        this.creationDateTime = creationDateTime;
-        this.status = status;
-    }
+    private String cpf;
 
     @Override
     public String toString(){

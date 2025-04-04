@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: 'mongo:4.0.10'
+    container_name: 'mongo-consent-api'
+    environment:
+      - 'MONGO_INITDB_DATABASE=Cluster0'
+      - 'MONGO_INITDB_ROOT_PASSWORD=qi5Hv3LfbGfe5GKs'
+      - 'MONGO_INITDB_ROOT_USERNAME=fazinho1999'
+    ports:
+      - '27017:27017'
+  app:
+    build: .
+    container_name: 'app-consent-api'
+    depends_on:
+      - mongodb
+    environment:
+      - 'MONGO_URI=mongodb://fazinho1999:qi5Hv3LfbGfe5GKs@mongo-consent-api:27017/Cluster0?authSource=admin'
+    ports:
+      - '8080:8080'

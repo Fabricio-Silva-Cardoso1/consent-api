@@ -21,6 +21,6 @@ public interface ConsentsMapper {
 
     List<GetAllConsentsResponseDTO> mapConsentsToGetAllConsentsResponseDTO(List<Consents> consents);
 
-    @Mapping(source = "id", target = "id")
+
     GetConsentByIdResponseDTO mapConsentsToGetConsentByIdResponseDTO(Consents consents);
 }

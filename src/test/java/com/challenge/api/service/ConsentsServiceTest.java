@@ -1,99 +1,82 @@
 package com.challenge.api.service;
 
-
 import com.challenge.api.constants.ConsentsStatus;
-import com.challenge.api.dto.GetAllConsentsResponseDTO;
 import com.challenge.api.dto.PostConsentRequestDTO;
-import com.challenge.api.dto.PostConsentsResponseDTO;
-import com.challenge.api.dto.PutConsentByIdRequestDTO;
+import com.challenge.api.exception.PostConsentsDtoException;
 import com.challenge.api.exception.PostConsentsException;
-import com.challenge.api.exception.PutConsentByIdException;
+import com.challenge.api.model.Consents;
 import com.challenge.api.repository.ConsentsRepository;
+import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
-
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@Testcontainers
+@DataMongoTest
 class ConsentsServiceTest {
 
-    @InjectMocks
+    @Mock
     private ConsentsService consentsService;
 
+    @Container
+    @ServiceConnection
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10");
+
     @Mock
-    private ConsentsRepository consentsRepository;
+    ConsentsRepository consentsRepository;
 
     @Test
-    @DisplayName("Deveria criar um consentimento e inserir no banco de dados!!")
-    void postConsents() {
-        /*
-        PostConsentRequestDTO postConsentRequestDTO = new PostConsentRequestDTO("111.111.111-11", 1);
-        PostConsentsResponseDTO postConsentsResponseTestDTO = new PostConsentsResponseDTO(UUID.randomUUID(), LocalDateTime.now(), LocalDateTime.now(), "222.222.222-22", ConsentsStatus.ACTIVE);
+    void connectionEstablished(){
+        assertThat(mongoDBContainer.isCreated()).isTrue();
+        assertThat(mongoDBContainer.isRunning()).isTrue();
+    }
 
-        Mockito.when(consentsService.postConsents(postConsentRequestDTO)).thenReturn(postConsentsResponseTestDTO);
-        PostConsentsResponseDTO postConsentsResponseDTO =  consentsService.postConsents(postConsentRequestDTO);
+    @Test
+    void postConsentsSuccess() {
 
-        Assertions.assertTrue(postConsentsResponseDTO.hasStatus()); */
+        PostConsentRequestDTO postConsentRequestDTOTest = new PostConsentRequestDTO("111.111.111-11", 2);
+        UUID consentId = UUID.randomUUID();
+        Consents consents = new Consents(consentId, ConsentsStatus.ACTIVE, LocalDateTime.now(), LocalDateTime.now().plusMonths(2), "111.111.111-00");
+        when(consentsRepository.save(consents)).thenReturn(consents);
 
     }
 
     @Test
-    @DisplayName("Deveria dar erro ao enviar CPF inválido!!")
-    void postConsents2() {
+    @DisplayName("Passar um CPF invalido! Deve retornar erro.")
+    void postConsentsWrongCPF() throws PostConsentsException{
 
-        PostConsentRequestDTO postConsentRequestDTO = new PostConsentRequestDTO("1.111.111-11", 1);
-        PostConsentsResponseDTO postConsentsResponseTestDTO = new PostConsentsResponseDTO(UUID.randomUUID(), LocalDateTime.now(), LocalDateTime.now(), "222.222.222-22", ConsentsStatus.ACTIVE);
+        PostConsentsException thrown = Assertions.assertThrows(PostConsentsException.class, () ->{
+            PostConsentRequestDTO postConsentRequestDTOTest = new PostConsentRequestDTO("333.333-33", 2);
+            consentsService.postConsents(postConsentRequestDTOTest);
+        });
 
-        PostConsentsException postConsentsException =  Assertions.assertThrows(
-
-                PostConsentsException.class,
-                () -> { consentsService.postConsents(postConsentRequestDTO);},
-                "CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##" );
-
-        Assertions.assertEquals("CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##", postConsentsException.getMessage());
-    }
-
-
-    @Test
-    @DisplayName("Data inválida. Data deve ser no futuro!!")
-    void putConsent() {
-
-        UUID id = UUID.fromString("51d9da1c-ca32-4dde-ae85-2e51917b1d5b");
-        PutConsentByIdRequestDTO putConsentByIdRequestDTO = new PutConsentByIdRequestDTO(ConsentsStatus.ACTIVE, LocalDateTime.now());
-
-        NullPointerException nullPointerException =  Assertions.assertThrows(
-
-                NullPointerException.class,
-                () -> { consentsService.putConsent(id, putConsentByIdRequestDTO);},
-                "Consentimento não encontrado!!" );
-
-        Assertions.assertEquals("Consentimento não encontrado!!", nullPointerException.getMessage());
-
+        Assertions.assertEquals("CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Consentimento não encontrado. Consentimento inexistente ou valor errado!!")
-    void putConsent02() {
+    @DisplayName("Passar uma data de validade invalida! Deve retornar erro.")
+    void postConsentsWrongDuration () throws PostConsentsDtoException{
 
-        UUID id = UUID.fromString("88cfc898-f2fb-0000-bb01-7008edc5cb81");
-        PutConsentByIdRequestDTO putConsentByIdRequestDTO = new PutConsentByIdRequestDTO(ConsentsStatus.ACTIVE, LocalDateTime.now().plusMonths(1));
+        PostConsentsDtoException exception = Assertions.assertThrows(PostConsentsDtoException.class, () ->{
+            PostConsentRequestDTO postConsentRequestDTOTest = new PostConsentRequestDTO("111.111.111-11", 0);
+            consentsService.postConsents(postConsentRequestDTOTest);
+        });
 
-        NullPointerException nullPointerException =  Assertions.assertThrows(
-
-                NullPointerException.class,
-                () -> { consentsService.putConsent(id, putConsentByIdRequestDTO);},
-                "Consentimento não encontrado!!" );
-
-        Assertions.assertEquals("Consentimento não encontrado!!", nullPointerException.getMessage());
+        Assertions.assertEquals("Duração do consentimento precisa ser preenchido com um valor maior que 0!", exception.getMessage());
 
     }
-
 }

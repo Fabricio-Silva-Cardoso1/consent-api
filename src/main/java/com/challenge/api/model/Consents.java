@@ -1,13 +1,12 @@
 package com.challenge.api.model;
 
 import com.challenge.api.constants.ConsentsStatus;
-import com.challenge.api.exception.PostConsentsException;
 import lombok.Builder;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

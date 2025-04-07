@@ -14,7 +14,6 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ConsentsMapper {
 
-
     PostConsentsResponseDTO mapConsentsToPostConsentsResponseDto(Consents consents);
 
     List<GetAllConsentsResponseDTO> mapConsentsToGetAllConsentsResponseDTO(List<Consents> consents);

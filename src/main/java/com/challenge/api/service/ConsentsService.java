@@ -35,15 +35,11 @@ public class ConsentsService {
         if(postConsentRequestDTO.isConsentDurationTimeEmpty()) throw new PostConsentsDtoException("Duração do consentimento precisa ser preenchido com um valor maior que 0!");
         if(!postConsentRequestDTO.isCpfValid(postConsentRequestDTO.cpf())) throw new PostConsentsException("CPF inválido. O campo deve ser preenchido e no formato ###.###.###-##");
 
-        LocalDateTime creationDateTime = LocalDateTime.now().withNano(0);
-
         Consents consents = Consents
                 .builder()
-                .status(ConsentsStatus.ACTIVE)
                 .cpf(postConsentRequestDTO.cpf())
                 .id(UUID.randomUUID())
-                .creationDateTime(creationDateTime)
-                .expirationDateTime(creationDateTime.plusMonths(Long.valueOf(postConsentRequestDTO.consentDurationTime())))
+                .expirationDateTime(LocalDateTime.now().plusMonths(Long.valueOf(postConsentRequestDTO.consentDurationTime())))
                 .build();
 
         Consents consentsCreated = this.consentsRepository.save(consents);

@@ -17,19 +17,22 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Consents {
 
     @Id
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @NotBlank(message = "Consentimento precisa de um status inicial!")
     @NotNull(message = "Consentimento precisa de um status inicial!")
-    private ConsentsStatus status;
+    @Builder.Default
+    private ConsentsStatus status = ConsentsStatus.ACTIVE;
 
     @NotBlank (message = "Precisa de uma data de criação")
     @NotNull
-    private LocalDateTime creationDateTime;
+    @Builder.Default
+    private LocalDateTime creationDateTime = LocalDateTime.now().withNano(0);
 
     @NotBlank(message = "Precisa de um tem de expiração")
     @NotNull

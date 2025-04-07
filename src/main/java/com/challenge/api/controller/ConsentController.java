@@ -19,7 +19,7 @@ public class ConsentController {
 
     @PostMapping("/consents")
     public ResponseEntity<PostConsentsResponseDTO> createConsents (@RequestBody PostConsentRequestDTO postConsentRequestDTO){
-        return new ResponseEntity<>(consentsService.postConsents(postConsentRequestDTO), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(consentsService.postConsents(postConsentRequestDTO));
     }
 
     @GetMapping("/consents")
@@ -38,8 +38,9 @@ public class ConsentController {
     }
 
     @DeleteMapping("/consents/{consentId}")
-    public ResponseEntity<String> deleteConsentById(@PathVariable UUID consentId){
-        return new ResponseEntity<>(consentsService.deleteConsent(consentId), HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteConsentById(@PathVariable UUID consentId){
+        consentsService.deleteConsent(consentId);
+        return ResponseEntity.noContent().build();
     }
 
 }
